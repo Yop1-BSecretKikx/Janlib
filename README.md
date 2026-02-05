@@ -1,6 +1,8 @@
 Simulate key press and mouse movement from your rust code.
 note this version is only working for mac users.
 
+crate : https://crates.io/crates/Janlib
+
 How to use,
 
 step 1 import the library in your Cargo.toml
