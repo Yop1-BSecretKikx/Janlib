@@ -6,6 +6,5 @@ use Janlib::*;
 fn main()
 {
     
-    
-    
+
 }

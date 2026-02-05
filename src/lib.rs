@@ -3,7 +3,6 @@ use std::time::Duration;
 use core_graphics::event::{CGEvent, CGEventFlags, CGKeyCode, EventField};
 use core_graphics::event_source::{CGEventSource, CGEventSourceStateID};
 use core_graphics::event::CGEventTapLocation;
-use std::sync::mpsc;
 use core_graphics::display::CGWarpMouseCursorPosition;
 use core_graphics::geometry::CGPoint;
 #[derive(Debug, Clone)]
@@ -199,28 +198,13 @@ impl KeyJob {
     }
 }
 
-#[derive(Debug)]
-pub enum MouseJobPos
-{
-    Pos(f64,f64)
-}
-impl MouseJobPos
-{
-    fn OpenPos(&self) -> Vec<f64>
-    {
-        match self
-        {
-            MouseJobPos::Pos(x,y) => vec![*x,*y]
-        }
-    }
-}
 
 pub struct JanKeymap
 {
     os:String,//Future Crossplatform
     latest_job:KeyJob,
     latest_sequance:String,
-    latest_movement:Vec<f64>,
+    delay:Duration
 }
 impl JanKeymap
 {
@@ -230,7 +214,7 @@ impl JanKeymap
             os:std::env::consts::OS.to_string(),
             latest_job:KeyJob::A,
             latest_sequance:String::from(""),
-            latest_movement:Vec::new()
+            delay:Duration::from_millis(0),
         }
     }
     fn SimulateKeyboardPress(&mut self) -> bool{
@@ -245,7 +229,6 @@ impl JanKeymap
             let event = CGEvent::new_keyboard_event(source.clone(), key, false).unwrap();
             event.post(CGEventTapLocation::HID);
         });
-        //Job.join().unwrap();
         return true;
     }
     pub fn KeyboardEvent(&mut self,SelectedKey:KeyJob) -> Option<bool>
@@ -256,6 +239,7 @@ impl JanKeymap
         }
         Some(true)
     }
+
     pub fn KeyboardStringSequance(&mut self,sequance:String)
     {
         let _ = sequance.chars().for_each(|c| {    
@@ -263,16 +247,21 @@ impl JanKeymap
             self.SimulateKeyboardPress(); 
         });
     }
-    pub fn MouseMovement(&mut self,pos_sequance:MouseJobPos)
+    pub fn MouseMovement(&mut self,pos_sequance:Vec<Vec<((f64,f64),Duration)>>)
     {
-        self.latest_movement = match pos_sequance{
-            MouseJobPos::Pos(x,y) => vec![x,y]
-        };
-        unsafe{
-            let latest_movement_cln = self.latest_movement.clone();
-            thread::spawn(move || {
-                CGWarpMouseCursorPosition(CGPoint::new(latest_movement_cln[0],latest_movement_cln[1]));
+        let _ = pos_sequance.iter().for_each(|vec| {
+            vec.iter().for_each(|((x,y),duration)|{
+                let strong_duration = duration.clone();
+                let strong_x = x.clone();
+                let strong_y = y.clone();
+                unsafe{
+                    let action = thread::spawn(move ||{
+                        CGWarpMouseCursorPosition(CGPoint::new(strong_x,strong_y));
+                        thread::sleep(strong_duration);
+                    });
+                    action.join().unwrap();
+                }
             });
-        }
+        });
     }
 }
