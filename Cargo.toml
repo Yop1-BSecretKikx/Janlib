@@ -2,6 +2,9 @@
 name = "Janlib"
 version = "0.1.0"
 edition = "2024"
+authors = ["github: https://github.com/Yop1-BSecretKikx/Janlib.git"]
+description = "Simulate key press and mouse movement on macOS"
+license = "MIT"
 
 [dependencies]
 core-graphics = "0.25.0"
