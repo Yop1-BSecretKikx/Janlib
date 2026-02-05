@@ -7,7 +7,7 @@ step 1 import the library in your Cargo.toml
 ```rust
 [dependencies]
 <<<<<<< HEAD
-Janlib = "0.1.0" //latest
+Janlib = "0.1.1" //latest
 =======
 Janlib = "0.1.0"
 >>>>>>> origin/main
