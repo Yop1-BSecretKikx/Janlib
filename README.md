@@ -6,7 +6,7 @@ How to use,
 step 1 import the library in your Cargo.toml
 ```rust
 [dependencies]
-Janlib = { git = "https://github.com/Yop1-BSecretKikx/Janlib.git" }
+Janlib = "0.1.0"
 ```
 step 2 inside create JanKeymap obj and import the library
 ```rust
