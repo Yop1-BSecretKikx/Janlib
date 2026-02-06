@@ -38,9 +38,9 @@ fn main() {
     //change the cursor pos to x 100.0 y 200.0
     action.MouseMovement(MouseJobPos::Pos(100.0, 200.0));
 
-
+    
     // Position loop: each vec contains ((x, y), duration before next position)
-    event.MouseMovement(vec![
+    action.MouseMovement(vec![
         vec![((400.0, 422.9), Duration::from_micros(100))], // top-left, wait 100µs
         vec![((600.0, 422.9), Duration::from_micros(4000))], // top-right, wait 4000µs
         vec![((600.0, 622.9), Duration::from_micros(2000))], // bottom-right, wait 2000µs
@@ -49,7 +49,7 @@ fn main() {
     ]);
 
     // Single move without delay
-    event.MouseMovement(vec![vec![((800.0, 111.0), Duration::from_millis(0))]]);
+    action.MouseMovement(vec![vec![((800.0, 111.0), Duration::from_millis(0))]]);
 
     //more feature coming soon
 }
